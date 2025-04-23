@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="es">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nuestra Historia de Amor</title>
+    <style>
+      /* Estilos generales */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+      }
+
+      body {
+        background-color: #121212;
+        color: white;
+        min-height: 100vh;
+        padding: 0;
+      }
+
+      main {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      h1 {
+        font-size: 2.5rem;
+        font-weight: bold;
+        color: #e979c3;
+        margin-bottom: 1rem;
+        text-align: center;
+      }
+
+      .subtitle {
+        color: #e979c3;
+        font-style: italic;
+        text-align: center;
+        margin-bottom: 4rem;
+        max-width: 32rem;
+      }
+
+      /* Grid de sobres */
+      .envelope-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 2rem;
+        width: 100%;
+      }
+
+      @media (min-width: 640px) {
+        .envelope-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        h1 {
+          font-size: 3rem;
+        }
+      }
+
+      @media (min-width: 768px) {
+        .envelope-grid {
+          grid-template-columns: repeat(3, 1fr);
+        }
+        h1 {
+          font-size: 3.5rem;
+        }
+      }
+
+      /* Sobre individual */
+      .envelope {
+        background-color: #231c24;
+        border-radius: 0.75rem;
+        padding: 1.5rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 200px;
+      }
+
+      .envelope:hover {
+        box-shadow: 0 0 15px rgba(233, 121, 195, 0.5);
+      }
+
+      .envelope-icon {
+        transition: all 0.5s ease;
+        width: 64px;
+        height: 64px;
+        color: #e979c3;
+      }
+
+      .envelope:hover .envelope-icon {
+        transform: scale(1.1) translateY(-8px);
+      }
+
+      .envelope-heart {
+        display: none;
+        color: #e979c3;
+        animation: pulse 1.5s infinite;
+      }
+
+      .envelope:hover .envelope-mail {
+        display: none;
+      }
+
+      .envelope:hover .envelope-heart {
+        display: block;
+      }
+
+      .envelope-content {
+        margin-top: 1rem;
+        text-align: center;
+        transition: all 0.3s ease;
+        opacity: 0;
+      }
+
+      .envelope:hover .envelope-content {
+        opacity: 1;
+      }
+
+      .envelope-date {
+        color: #e979c3;
+        font-size: 0.875rem;
+      }
+
+      .envelope-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-top: 0.25rem;
+      }
+
+      .envelope-corner {
+        position: absolute;
+        bottom: 0.5rem;
+        right: 0.5rem;
+        width: 1rem;
+        height: 1rem;
+        color: #e979c3;
+        opacity: 0.7;
+      }
+
+      /* Modal */
+      .modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.8);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 50;
+        padding: 1rem;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+      }
+
+      .modal.active {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      .modal-content {
+        background-color: #231c24;
+        border-radius: 0.75rem;
+        max-width: 32rem;
+        width: 100%;
+        max-height: 90vh;
+        overflow: auto;
+        animation: fadeIn 0.3s ease-out forwards;
+        position: relative;
+      }
+
+      .modal-inner {
+        padding: 2rem;
+      }
+
+      .modal-close {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        background: none;
+        border: none;
+        color: rgba(255, 255, 255, 0.7);
+        cursor: pointer;
+        transition: color 0.2s;
+      }
+
+      .modal-close:hover {
+        color: white;
+      }
+
+      .modal-header {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 1.5rem;
+      }
+
+      .modal-heart {
+        color: #e979c3;
+        width: 3rem;
+        height: 3rem;
+        margin-bottom: 1rem;
+      }
+
+      .modal-date {
+        color: #e979c3;
+        font-size: 0.875rem;
+      }
+
+      .modal-title {
+        font-size: 1.75rem;
+        font-weight: bold;
+        color: white;
+        margin-top: 0.5rem;
+        text-align: center;
+      }
+
+      .modal-divider {
+        border-top: 1px solid rgba(233, 121, 195, 0.3);
+        margin-bottom: 1.5rem;
+      }
+
+      .modal-body {
+        color: rgba(255, 255, 255, 0.9);
+        line-height: 1.7;
+        font-size: 1.125rem;
+        font-style: italic;
+      }
+
+      .modal-footer {
+        display: flex;
+        justify-content: center;
+        margin-top: 2rem;
+      }
+
+      .modal-footer-heart {
+        color: #e979c3;
+        width: 1.25rem;
+        height: 1.25rem;
+      }
+
+      /* Animaciones */
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: scale(0.95);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.1);
+        }
+      }
+      .navbar {
+        background-color: rgba(0, 0, 0, 0.8);
+        backdrop-filter: blur(10px);
+        border-bottom: 1px solid rgba(236, 72, 153, 0.2);
+        position: sticky;
+        top: 0;
+        z-index: 40;
+        transition: all 0.3s ease;
+        padding: 0.75rem 0;
+      }
+
+      .navbar.scrolled {
+        box-shadow: 0 4px 20px rgba(236, 72, 153, 0.15);
+      }
+
+      .container {
+        width: 100%;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 1rem;
+      }
+
+      .nav-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 2.5rem;
+        align-items: center;
+      }
+
+      .nav-link {
+        color: white;
+        text-decoration: none;
+        position: relative;
+        transition: color 0.3s ease;
+        font-size: 1rem;
+      }
+
+      .nav-link::after {
+        content: "";
+        position: absolute;
+        width: 0;
+        height: 2px;
+        bottom: -4px;
+        left: 0;
+        background-color: #ec4899;
+        transition: width 0.3s ease;
+      }
+
+      .nav-link:hover {
+        color: #f472b6;
+      }
+
+      .nav-link:hover::after,
+      .nav-link.active::after {
+        width: 100%;
+      }
+
+      .nav-link.active {
+        color: #ec4899;
+      }
+
+      .mobile-toggle {
+        display: none;
+        background: none;
+        border: none;
+        color: #ec4899;
+        cursor: pointer;
+        padding: 0.5rem;
+      }
+
+      .mobile-menu {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.95);
+        z-index: 50;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      .mobile-menu.open {
+        opacity: 1;
+        pointer-events: auto;
+        display: flex;
+      }
+
+      .mobile-links {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+        text-align: center;
+      }
+
+      .mobile-link {
+        color: white;
+        text-decoration: none;
+        font-size: 1.5rem;
+        transition: color 0.3s ease;
+      }
+
+      .mobile-link:hover,
+      .mobile-link.active {
+        color: #ec4899;
+      }
+
+      .close-menu {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        background: none;
+        border: none;
+        color: #ec4899;
+        cursor: pointer;
+        padding: 0.5rem;
+      }
+
+      @media (max-width: 768px) {
+        .nav-links {
+          display: none;
+        }
+
+        .mobile-toggle {
+          display: block;
+        }
+
+        .nav-container {
+          justify-content: flex-end;
+        }
+      }
+      .locked-icon {
+        opacity: 0.5;
+        filter: grayscale(100%);
+      }
+      .envelope.locked {
+        cursor: not-allowed;
+        opacity: 0.6;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Barra de navegación -->
+    <nav class="navbar" id="navbar">
+      <div class="container">
+        <div class="nav-container">
+          <div class="nav-links">
+            <a href="menu.html" class="nav-link active">Inicio</a>
+            <a href="historia.html" class="nav-link">Historia</a>
+            <a href="contador.html" class="nav-link">Contador</a>
+            <a href="cartas.html" class="nav-link">Cartas</a>
+          </div>
+          <button class="mobile-toggle" id="mobile-toggle">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <line x1="3" y1="6" x2="21" y2="6" />
+              <line x1="3" y1="12" x2="21" y2="12" />
+              <line x1="3" y1="18" x2="21" y2="18" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Menú móvil -->
+    <div class="mobile-menu" id="mobile-menu">
+      <button class="close-menu" id="close-menu">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <line x1="18" y1="6" x2="6" y2="18" />
+          <line x1="6" y1="6" x2="18" y2="18" />
+        </svg>
+      </button>
+      <div class="mobile-links">
+        <a href="menu.html" class="mobile-link active">Inicio</a>
+        <a href="historia.html" class="mobile-link">Historia</a>
+        <a href="contador.html" class="mobile-link">Contador</a>
+        <a href="cartas.html" class="mobile-link">Cartas</a>
+      </div>
+    </div>
+
+    <main>
+      <h1>Nuestra Historia de Amor</h1>
+      <p class="subtitle">
+        "Cada momento contigo es un verso en nuestro poema de amor"
+      </p>
+
+      <div class="envelope-grid" id="envelopeGrid">
+        <!-- Los sobres se generarán con JavaScript -->
+      </div>
+    </main>
+
+    <!-- Modal para mostrar la carta -->
+    <div class="modal" id="letterModal">
+      <div class="modal-content">
+        <div class="modal-inner">
+          <button class="modal-close" id="modalClose" aria-label="Cerrar">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+
+          <div class="modal-header">
+            <svg
+              class="modal-heart"
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path
+                d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"
+              ></path>
+            </svg>
+            <p class="modal-date" id="modalDate"></p>
+            <h2 class="modal-title" id="modalTitle"></h2>
+          </div>
+
+          <div class="modal-divider"></div>
+
+          <div class="modal-body" id="modalContent"></div>
+
+          <div class="modal-footer">
+            <svg
+              class="modal-footer-heart"
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path
+                d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"
+              ></path>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Datos de las cartas
+      const letters = [
+        {
+          date: "14 de Febrero, 2025",
+          title:
+            "Contigo las palabras siempre se quedan cortas, pero hoy quiero intentarlo.",
+          content:
+            "Nunca he escrito una carta antes, pero contigo todo es diferente. Me inspiras a hacer cosas que nunca imaginé. Contigo he vivido tantas primeras veces en tan poco tiempo: la primera vez que regalé flores🌻, la primera vez que trato de poner en palabras lo que siento y la primera vez que siento algo así de fuerte.💓 \n\n Cuando te digo “me caes mal”, en realidad es mi forma (muy tonta😅) de decir lo mucho que siento por ti. Me haces sentir increíble, pero a la vez muy vulnerable, seguro de todo, pero al mismo tiempo nervioso… y, sinceramente, es mi sensación favorita. \n\n Desde el día que te vi, sentí algo increíble y especial (Y si eras tú no hay confusión🙄). No fue para nada una casualidad y de eso estoy segurísimo, me enamoré en seguida, y desde entonces no sales de mi mente. Y aunque ese día ya sentía muchísimo por ti, jamás pensé que te llegaría a AMAR como lo hago ahora. ❤️\n\n Y… aunque no lo sabes, llegaste a mi vida justo cuando más te necesitaba. Sin darte cuenta, me devolviste la felicidad en todo lo que hacías: en verte jugar, en reírme contigo, en escuchar música juntos. Pero sobre todo, no tienes idea de lo feliz que era hablando contigo en las vacaciones… en serio, eras lo único en lo que pensaba en ese tiempo. Y todos los que me conocen lo notan, porque contigo, en tan poco tiempo, encontré la mejor versión de mí. Solo pensar en ti mejora mi día, y abrazarte y besarte me hace la persona más feliz del mundo.❤️‍🩹\n\n Danna Valeska, eres mi razón de ser feliz, mi vida y mi todo. Y realmente quiero que sentirme así contigo siempre. TE AMO 🫶🫶🫶",
+        },
+        {
+          date: "28 de Febrero, 2025",
+          title: "Te mereces el universo entero.",
+          content:
+            'Danna...\n\nEn serio, no sé si es hoy o mañana nuestro primer mes, pero como te dije esta mañana, no es desde que fuimos novios, sino desde antes, que cambiaste mi vida. Le diste un giro por completo. Los momentos que había dejado de disfrutar se volvieron mágicos contigo. Me haces una mejor persona, y eso no solo me hace feliz a mí, sino también a todo mi entorno.\n\nSé que me vas a decir algo como "nunca va a pasar", y realmente eso es lo que espero: estar contigo por toda la eternidad. Pero si algún día (esperemos que nunca) dejas de amarme o simplemente crees que algo no funciona, quiero que sepas y tengas siempre en mente que eres una persona increíble y te mereces lo mejor del mundo.\n\nProbablemente, eso sea lo que más me impactó cuando conocí un poco más de tu historia… que pienses que nadie puede amarte por quien eres. Danna, eres una persona fantástica. Te lo dije la primera vez que te vi: me enamoré por lo bella que eres. Pero el día que empezamos a hablar supe que no era algo tan simple como un "me gusta".\n\nCuando hablamos de música, yo ya me sentía genial, y genuinamente sentía que te amaba. No porque "amor" sea una palabra fuerte, sino porque empecé a sentir todo eso que hasta hoy no sé cómo expresar.\n\nLos siguientes días, aunque solo nos saludábamos y hablábamos poco, fueron increíbles. Y cuando empezamos a conocernos mejor (aunque tuvo que ser por chat, por las vacaciones), sentí por primera vez la intensidad del amor real. Pasaba los días enteros esperando tus mensajes, hablándole de ti a todo el mundo como si fuéramos inseparables de toda la vida, extrañándote las 24 horas del día.\n\nDespués de todo eso, este mes de novios ha sido incluso más increíble. Nunca me había sentido tan amado. Eres una persona detallista, romántica, dulce, a veces sensible, con un corazón tan grande que lo quiero proteger siempre. Me enseñaste lo que es sentirse correspondido y querido de una forma que nunca antes había experimentado.\n\nDanna, te mereces lo mejor del mundo, y espero poder ser yo quien te lo dé en el futuro. TE AMO.',
+        },
+        {
+          date: "",
+          title: "",
+          content: "",
+          locked: true,
+        },
+        {
+          date: "",
+          title: "",
+          content: "",
+          locked: true,
+        },
+        {
+          date: "",
+          title: "",
+          content: "",
+          locked: true,
+        },
+        {
+          date: "",
+          title: "",
+          content: "",
+          locked: true,
+        },
+        {
+          date: "",
+          title: "",
+          content: "",
+          locked: true,
+        },
+        {
+          date: "31 de Marzo, 2025",
+          title:
+            "Desde la primera vez que te vi, no quise conocer a nadie más.",
+          content:
+            "Amor de mi alma,\n\nSé que Los Simpson no es algo muy romántico que digamos, jajaja. Es más, para nada. Pero desde niño fue, en general, una serie muy especial para mí. Sé que no son el mejor ejemplo de una relación ni de una vida perfecta, pero dentro de su imperfección, y a pesar de que —como hemos hablado— amor es una palabra para describir lo que no se puede explicar, yo entendí por primera vez un poco de lo que significa amar.\n\nAmar es enfrentar obstáculos juntos, reír juntos, compartir miles de momentos, apoyarse mutuamente y, sobre todo, elegir cada día a la persona que más amas. Y esa persona siempre vas a ser tú, Danna Valeska.\n\nComo también ya sabes, una escena que siempre me encantó fue la de la carta:\n“Desde la primera vez que te vi, no quise conocer a nadie más. No tengo mucho que ofrecerte, solo todo mi amor.”\nEs una escena, y unas palabras, tan cortas, pero que al mismo tiempo significaron —y significan— mucho para mí. Hoy, al pensarte, la siento aún más en mi corazón. Porque contigo entendí lo que esa frase quiere decir. Tú eres mi elección constante, mi hogar, y el amor que no tiene límites ni condiciones.\n\nDanna Valeska, desde la primera vez que te vi, supe que no quería conocer a nadie más. Sé que mi vida, por más simple que sea, la quiero compartir siempre contigo. No tengo mucho dinero, no soy el más divertido ni la mejor persona, y no puedo prometerte nada grandioso. Pero tengo algo que puedo decir con total seguridad:\nun amor enorme por ti.\n\nTe amo de aquí a la luna... a pasitos de tortuga. 🐢🌙",
+        },
+        {
+          date: "23 de Abril, 2025",
+          title: "Te Amo",
+          content:
+            "Dos palabras que encierran todo lo que siento por ti. Te amo con cada latido de mi corazón, con cada respiro, con todo mi ser. Mi amor por ti es infinito.",
+        },
+      ];
+
+      // Elementos del DOM
+      const envelopeGrid = document.getElementById("envelopeGrid");
+      const modal = document.getElementById("letterModal");
+      const modalClose = document.getElementById("modalClose");
+      const modalDate = document.getElementById("modalDate");
+      const modalTitle = document.getElementById("modalTitle");
+      const modalContent = document.getElementById("modalContent");
+
+      // Generar los sobres
+      letters.forEach((letter, index) => {
+        const envelope = document.createElement("div");
+        envelope.className = "envelope";
+        envelope.innerHTML = `
+  <div class="envelope-icon ${letter.locked ? "locked-icon" : "envelope-mail"}">
+    ${
+      letter.locked
+        ? `
+      <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#e979c3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+      </svg>
+    `
+        : `
+      <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect width="20" height="16" x="2" y="4" rx="2"></rect>
+        <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
+      </svg>
+    `
+    }
+  </div>
+<div class="envelope-icon envelope-heart">
+  <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
+  </svg>
+</div>
+  <div class="envelope-content">
+    <p class="envelope-date">${letter.date}</p>
+    <h3 class="envelope-title">${letter.title}</h3>
+  </div>
+<div class="envelope-corner">
+  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="#e979c3" stroke="#e979c3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 1 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+  </svg>
+</div>
+
+`;
+
+        // Abrir modal al hacer clic
+        envelope.addEventListener("click", () => {
+          if (letter.locked) {
+            envelope.classList.add("locked");
+            Swal.fire({
+              icon: "info",
+              title: "Carta bloqueada",
+              text: "Esta carta aún no está disponible 💌",
+              confirmButtonColor: "#e979c3",
+              background: "#231c24",
+              color: "white",
+            });
+            return;
+          }
+          openModal(letter);
+        });
+
+        envelopeGrid.appendChild(envelope);
+      });
+
+      // Funciones para el modal
+      function openModal(letter) {
+        modalDate.textContent = letter.date;
+        modalTitle.textContent = letter.title;
+        modalContent.innerHTML = letter.content.replace(/\n/g, "<br>");
+        modal.classList.add("active");
+        document.body.style.overflow = "hidden";
+
+        // Cerrar modal con la tecla Escape
+        document.addEventListener("keydown", handleEscKey);
+      }
+
+      function closeModal() {
+        modal.classList.remove("active");
+        document.body.style.overflow = "auto";
+        document.removeEventListener("keydown", handleEscKey);
+      }
+
+      function handleEscKey(e) {
+        if (e.key === "Escape") {
+          closeModal();
+        }
+      }
+
+      // Cerrar modal al hacer clic en el botón de cerrar
+      modalClose.addEventListener("click", closeModal);
+
+      // Cerrar modal al hacer clic fuera del contenido
+      modal.addEventListener("click", (e) => {
+        if (e.target === modal) {
+          closeModal();
+        }
+      });
+      document.addEventListener("DOMContentLoaded", function () {
+        const mobileToggle = document.getElementById("mobile-toggle");
+        const closeMenu = document.getElementById("close-menu");
+        const mobileMenu = document.getElementById("mobile-menu");
+        const navbar = document.getElementById("navbar");
+
+        mobileToggle.addEventListener("click", function () {
+          mobileMenu.classList.add("open");
+        });
+
+        closeMenu.addEventListener("click", function () {
+          mobileMenu.classList.remove("open");
+        });
+
+        window.addEventListener("scroll", function () {
+          if (window.scrollY > 10) {
+            navbar.classList.add("scrolled");
+          } else {
+            navbar.classList.remove("scrolled");
+          }
+        });
+
+        const currentPage = window.location.pathname.split("/").pop();
+        const navLinks = document.querySelectorAll(".nav-link");
+        const mobileLinks = document.querySelectorAll(".mobile-link");
+
+        function setActiveLinks(links) {
+          links.forEach((link) => {
+            const href = link.getAttribute("href");
+            if (
+              href === currentPage ||
+              (currentPage === "" && href === "index.html")
+            ) {
+              link.classList.add("active");
+            } else {
+              link.classList.remove("active");
+            }
+          });
+        }
+
+        setActiveLinks(navLinks);
+        setActiveLinks(mobileLinks);
+      });
+    </script>
+  </body>
+</html>
