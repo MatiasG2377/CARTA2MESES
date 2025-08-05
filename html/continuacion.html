@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Nuestras Memorias</title>
+    <title>Más Recuerdos</title>
     <style>
       * {
         margin: 0;
@@ -20,7 +20,6 @@
         position: relative;
       }
 
-      /* Fondo estrellado */
       .stars {
         position: fixed;
         top: 0;
@@ -56,6 +55,29 @@
         max-width: 1400px;
         margin: 0 auto;
         padding: 40px 20px;
+      }
+
+      .text-center {
+        text-align: center;
+        padding: 60px 20px;
+        margin-bottom: 40px;
+      }
+
+      .text-center h1 {
+        font-size: clamp(2.5rem, 5vw, 4rem);
+        font-weight: bold;
+        color: #f472b6;
+        margin-bottom: 30px;
+        text-shadow: 0 0 20px rgba(244, 114, 182, 0.3);
+      }
+
+      .text-center p {
+        font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+        color: #fce7f3;
+        line-height: 1.6;
+        font-style: italic;
+        max-width: 800px;
+        margin: 0 auto;
       }
 
       .gallery {
@@ -101,32 +123,6 @@
         transform: scale(1.1);
       }
 
-      /* Texto central */
-      .text-center {
-        grid-column: 1 / -1;
-        text-align: center;
-        padding: 60px 20px;
-        margin: 40px 0;
-      }
-
-      .text-center h1 {
-        font-size: clamp(2.5rem, 5vw, 4rem);
-        font-weight: bold;
-        color: #f472b6;
-        margin-bottom: 30px;
-        text-shadow: 0 0 20px rgba(244, 114, 182, 0.3);
-      }
-
-      .text-center p {
-        font-size: clamp(1.1rem, 2.5vw, 1.5rem);
-        color: #fce7f3;
-        line-height: 1.6;
-        font-style: italic;
-        max-width: 800px;
-        margin: 0 auto;
-      }
-
-      /* Responsive */
       @media (max-width: 768px) {
         .gallery {
           grid-template-columns: 1fr;
@@ -139,7 +135,7 @@
 
         .text-center {
           padding: 40px 15px;
-          margin: 20px 0;
+          margin-bottom: 20px;
         }
       }
 
@@ -154,105 +150,57 @@
           grid-template-columns: repeat(4, 1fr);
         }
       }
-      .btn-next {
-        display: inline-block;
-        padding: 14px 28px;
-        background: rgba(244, 114, 182, 0.15);
-        border: 1px solid rgba(244, 114, 182, 0.3);
-        backdrop-filter: blur(10px);
-        color: #f9a8d4;
-        font-size: 1.2rem;
-        font-weight: bold;
-        border-radius: 50px;
-        text-decoration: none;
-        transition: all 0.3s ease;
-        box-shadow: 0 0 20px rgba(244, 114, 182, 0.2);
-      }
-
-      .btn-next:hover {
-        background: rgba(244, 114, 182, 0.3);
-        color: white;
-        transform: translateY(-3px);
-        box-shadow: 0 10px 30px rgba(244, 114, 182, 0.4);
-      }
     </style>
   </head>
   <body>
     <div class="stars" id="stars"></div>
 
     <div class="container">
+      <!-- Texto arriba -->
+      <div class="text-center">
+        <h1>Mi princesa preciosa</h1>
+        <p>
+          Espero yo también poder hacer feliz a tu yo pequeña y a tu yo
+          actual... porque siempre serás mi chiquita preciosa.
+        </p>
+      </div>
+
+      <!-- Galería de fotos -->
       <div class="gallery">
-        <!-- Primera fila de fotos -->
         <div class="photo horizontal">
-          <img src="../img/gracias/2.jpg" alt="Momento especial" />
+          <img src="../img/gracias/danna1.jpg" alt="Foto 1" />
         </div>
-
         <div class="photo vertical">
-          <img src="../img/gracias/1.jpg" alt="Recuerdo vertical" />
+          <img src="../img/gracias/danna2.jpg" alt="Foto 2" />
         </div>
-
         <div class="photo horizontal">
-          <img src="../img/gracias/5.jpg" alt="Paisaje juntos" />
+          <img src="../img/gracias/danna3.jpg" alt="Foto 3" />
         </div>
-
         <div class="photo vertical">
-          <img src="../img/gracias/3.jpg" alt="Momento íntimo" />
+          <img src="../img/gracias/danna4.jpg" alt="Foto 4" />
         </div>
-
-        <!-- Texto central -->
-        <!-- Texto central -->
-        <div class="text-center">
-          <h1>Gracias por hacer feliz a mi niño interior</h1>
-          <p>
-            Con cada gesto tuyo, con cada risa compartida, sanaste partes de mí
-            que ni yo sabía que necesitaban amor. Gracias por cuidar al niño que
-            aún vive en mí y por hacerle sentir que, al fin, encontró su hogar.
-          </p>
-          <div class="text-center">
-            <a href="./continuacion.html" class="btn-next"
-              >Y eso no es todo...</a
-            >
-          </div>
-        </div>
-
-        <!-- Segunda fila de fotos -->
         <div class="photo horizontal">
-          <img src="../img/gracias/7.jpg" alt="Aventura compartida" />
+          <img src="../img/gracias/danna5.jpg" alt="Foto 5" />
         </div>
-
         <div class="photo vertical">
-          <img src="../img/gracias/6.jpg" alt="Sonrisa capturada" />
+          <img src="../img/gracias/danna6.jpg" alt="Foto 6" />
         </div>
-
         <div class="photo horizontal">
-          <img src="../img/gracias/9.jpg" alt="Atardecer romántico" />
+          <img src="../img/gracias/danna7.jpg" alt="Foto 7" />
         </div>
-
         <div class="photo vertical">
-          <img src="../img/gracias/8.jpg" alt="Miradas cómplices" />
+          <img src="../img/gracias/danna8.jpg" alt="Foto 8" />
         </div>
-
-        <!-- Tercera fila de fotos -->
         <div class="photo horizontal">
-          <img src="../img/gracias/10.jpg" alt="Caminata en la playa" />
+          <img src="../img/gracias/danna9.jpg" alt="Foto 9" />
         </div>
-
         <div class="photo vertical">
-          <img src="../img/gracias/11.jpg" alt="Abrazo eterno" />
-        </div>
-
-        <div class="photo horizontal">
-          <img src="../img/gracias/13.jpg" alt="Picnic romántico" />
-        </div>
-
-        <div class="photo vertical">
-          <img src="../img/gracias/15.jpg" alt="Baile bajo las estrellas" />
+          <img src="../img/gracias/danna10.jpg" alt="Foto 10" />
         </div>
       </div>
     </div>
 
     <script>
-      // Generar estrellas dinámicamente
       function createStars() {
         const starsContainer = document.getElementById("stars");
         const numberOfStars = 150;
@@ -268,15 +216,12 @@
         }
       }
 
-      // Inicializar estrellas cuando carga la página
       window.addEventListener("load", createStars);
 
-      // Efecto de hover adicional para las fotos
       document.querySelectorAll(".photo").forEach((photo) => {
         photo.addEventListener("mouseenter", function () {
           this.style.transform = "translateY(-10px) scale(1.02)";
         });
-
         photo.addEventListener("mouseleave", function () {
           this.style.transform = "translateY(0) scale(1)";
         });
